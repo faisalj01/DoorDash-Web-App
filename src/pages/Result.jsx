@@ -17,8 +17,6 @@ const Results = () => {
                     const groups = result.data;
 
                     // Extract modules
-                    const allModules = groups.map(g => g.groupNumber);
-                    sessionStorage.setItem("allModulesCount", JSON.stringify(allModules));
                     setModules(groups);
 
                     // Flatten questions
@@ -121,26 +119,32 @@ const Results = () => {
                         Key Takeaways
                     </h2>
 
-                    <div className="max-w-[60rem] grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {questions.map((q, i) => (
-                            <div
-                                key={q._id}
-                                className="flex gap-2 items-baseline rounded-[1rem] border border-gray-300 w-full p-4 sm:p-6 break-words"
-                            >
-                                {/* Number */}
-                                <span className=" font-bold text-[1rem] sm:text-[1.1rem] md:text-[1.2rem]">
-                                    {String(i + 1).padStart(2, "0")}.
-                                </span>
+                    {questions.length === 0 ? (
+                        <p className="text-gray-500 text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] py-4">
+                            Loading answers...
+                        </p>
+                    ) : (
+                        <div className="w-full max-w-[60rem] grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {questions.map((q, i) => (
+                                <div
+                                    key={q._id}
+                                    className="flex gap-2 items-baseline rounded-[1rem] border border-gray-300 w-full p-4 sm:p-6 break-words"
+                                >
+                                    {/* Number */}
+                                    <span className="font-bold text-[1rem] sm:text-[1.1rem] md:text-[1.2rem]">
+                                        {String(i + 1).padStart(2, "0")}.
+                                    </span>
 
-                                {/* Answer text */}
-                                <p className="text-sm sm:text-base text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] break-words">
-                                    {q.correctAnswer && q.options ? q.options[q.correctAnswer] : "No answer available"}
-                                </p>
-                            </div>
-
-                        ))}
-                    </div>
+                                    {/* Answer text */}
+                                    <p className="text-sm sm:text-base text-[1rem] sm:text-[1.1rem] md:text-[1.2rem] break-words">
+                                        {q.correctAnswer && q.options ? q.options[q.correctAnswer] : "No answer available"}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
+
 
 
                 {/* Call to Action */}
@@ -157,7 +161,7 @@ const Results = () => {
 
                         <button
                             onClick={handleNext}
-                            className=" w-full sm:w-[13rem] h-[2.5rem] sm:h-[3rem]
+                            className=" w-[8rem] sm:w-[13rem] h-[2.5rem] sm:h-[3rem]
               rounded-[0.463rem] text-tertiary
               flex items-center justify-center
               hover:bg-primary hover:text-white transition-colors duration-300

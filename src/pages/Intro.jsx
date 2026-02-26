@@ -32,7 +32,6 @@ const ModuleView = () => {
         if (result.success) {
           setAllGroups(result.data);
 
-
           let globalModuleUrl = null;
 
           for (const group of result.data) {
@@ -448,7 +447,7 @@ const ModuleView = () => {
           currentSlide={currentPageNumber}
         />
 
-        <div className="left-1/2 transform -translate-x-1/2 relative -mt-[4rem] w-[90%] rounded-lg border border-gray-300 flex flex-col gap-4 p-6 bg-white mb-12">
+        <div className="left-1/2 transform -translate-x-1/2 relative -mt-[4rem] w-[90%] rounded-lg border border-gray-300 flex flex-col gap-4 p-4 sm:p-6 md:p-8 bg-white mb-12">
           {/* Question */}
           <h2 className="text-[1.1rem] sm:text-[1.2rem] md:text-[1.3rem] font-bold break-words mb-2">
             {currentPageData.questionIndex}. {question.questionText}
@@ -606,13 +605,14 @@ const ModuleView = () => {
         totalSlides={totalPages}
         currentSlide={currentPageNumber}
         videoDuration={module?.videoDuration || ""}
+        imageUrl={module?.imageUrl}
         videoLink={module?.videoLink}
       />
 
-      <div className="left-1/2 transform -translate-x-1/2 relative -mt-[4rem] w-[90%] rounded-lg border border-gray-300 flex flex-col p-8 bg-white mb-12">
+      <div className="left-1/2 transform -translate-x-1/2 relative -mt-[4rem] w-[90%] rounded-lg border border-gray-300 flex flex-col p-4 sm:p-6 md:p-8 bg-white mb-12">
         <div className="flex flex-col md:flex-row justify-between gap-6 md:gap-8">
           {/* Text Section */}
-          <div className={`flex flex-col ${module.videoLink ? 'w-full md:w-1/2' : 'w-full'}`}>
+          <div className={`flex flex-col ${module.videoLink || module.imageUrl ? 'w-full md:w-1/2' : 'w-full'}`}>
             {(() => {
               const content = parseContent(module.content);
               return content.map((item, idx) => {
@@ -635,7 +635,7 @@ const ModuleView = () => {
                     return (
                       <ul
                         key={item.id || idx}
-                        className="list-disc list-inside text-[0.9rem] sm:text-[1rem] md:text-[1.1rem] mb-3"
+                        className="list-disc list-inside text-[0.9rem] sm:text-[1rem] md:text-[1.1rem] mb-1.5"
                       >
                         {Array.isArray(item.content) &&
                           item.content
@@ -666,22 +666,26 @@ const ModuleView = () => {
             })()}
           </div>
 
-          {/* Video Section */}
-          {module.videoLink && (
+          {/*Image & Video Section */}
+          {(module.videoLink || module.imageUrl) && (
             <div className="w-full md:w-1/2">
-              <div className="w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-                <ReactPlayer
-                  ref={playerRef}
-                  src={module.videoLink}
-                  controls
-                  width="100%"
-                  height="100%"
-                  config={{
-                    youtube: {
-                      playerVars: { showinfo: 1 }
-                    }
-                  }}
-                />
+              <div className="w-full aspect-video max-w-full overflow-hidden">
+                {module.videoLink ? (
+                  <ReactPlayer
+                    ref={playerRef}
+                    src={module.videoLink}
+                    controls
+                    width="100%"
+                    height="100%"
+                    style={{ border: 'none' }}
+                  />
+                ) : (
+                  <img
+                    src={module.imageUrl}
+                    alt="Module"
+                    className="w-full h-full object-contain rounded"
+                  />
+                )}
               </div>
             </div>
           )}
